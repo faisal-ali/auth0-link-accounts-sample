@@ -1,6 +1,6 @@
 // URL mapping, from hash to a function that responds to that URL action
 const router = {
-  "/": () => showContent("content-home"),
+  "/": (extra_content) => showContent("content-home", extra_content),
   "/profile": () =>
     requireAuth(() => showContent("content-profile"), "/profile"),
   "/login": () => login(),
@@ -26,9 +26,14 @@ const eachElement = (selector, fn) => {
  * router, defined above.
  * @param {*} url The route URL
  */
-const showContentFromUrl = (url) => {
+const showContentFromUrl = (url,extra_content='') => {
   if (router[url]) {
-    router[url]();
+    if(extra_content != '') {
+      router[url](extra_content);  
+    }
+    else{
+      router[url]();
+    }
     return true;
   }
 
@@ -48,9 +53,12 @@ const isRouteLink = (element) =>
  * so that it can be correctly hidden before the requested content is shown.
  * @param {*} id The id of the content to show
  */
-const showContent = (id) => {
+const showContent = (id, extra_content='') => {
   eachElement(".page", (p) => p.classList.add("hidden"));
   document.getElementById(id).classList.remove("hidden");
+  if(extra_content != '') {
+    document.getElementById('extra-content').textContent += extra_content;
+  }
 };
 
 const refreshLinkedAccounts = (profile, supressEventSubscription = false) => {

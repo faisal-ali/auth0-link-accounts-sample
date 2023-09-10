@@ -156,6 +156,8 @@ window.onload = async () => {
     }
   }
 
+
+
   try {
     await auth0.getTokenSilently();
   } catch {}
@@ -168,6 +170,14 @@ window.onload = async () => {
     showContentFromUrl("/profile");
   } else {
     window.history.replaceState({ url: "/" }, {}, "/");
-    showContentFromUrl("/");
+    
+    const containsError = query.includes("error=");
+    if(containsError) {
+      showContentFromUrl("/", "Please verify email and then try to login");
+    }
+    else{
+      showContentFromUrl("/");
+    }
+    
   }
 };
